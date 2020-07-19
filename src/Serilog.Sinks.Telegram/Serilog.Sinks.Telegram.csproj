@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Version>1.0.0</Version>
     <AssemblyName>Serilog.Sinks.Telegram</AssemblyName>
     <RootNamespace>Serilog</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>LykkeBiz.Serilog.Sinks.Telegram</PackageId>
     <Company>LykkeBusiness</Company>
     <Description>Serilog.Sinks.Telegram is a library to save logging information from https://github.com/serilog/serilog to https://core.telegram.org/bots. </Description>
-    <PackageTags>c# csharp serilog telegram sink logging log</PackageTags>
+    <PackageTags>Lykke;LykkeBusiness</PackageTags>
     <PackageProjectUrl>https://www.nuget.org/packages/LykkeBiz.Serilog.Sinks.Telegram/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/LykkeBusinessPlatform/Serilog.Sinks.Telegram</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,5 +25,10 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="2.3.0" />
   </ItemGroup>
-
+  <ItemGroup Label="dotnet pack instructions">
+    <Content Include="$(OutputPath)Serilog.Sinks.Telegram.pdb">
+      <Pack>true</Pack>
+      <PackagePath>lib/netstandard2.0</PackagePath>
+    </Content>
+  </ItemGroup>
 </Project>
