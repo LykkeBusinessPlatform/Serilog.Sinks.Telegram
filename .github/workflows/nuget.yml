@@ -18,7 +18,7 @@ jobs:
         run: dotnet build --configuration Release "Serilog.Sinks.Telegram.sln"
         
       - name: Create the package
-        run: dotnet pack --configuration Release src/Serilog.Sinks.Telegram/Serilog.Sinks.Telegram.csproj /p:Version=${GITHUB_REF#refs/tags/}
+        run: dotnet pack --configuration Release --no-build src/Serilog.Sinks.Telegram/Serilog.Sinks.Telegram.csproj /p:Version=${GITHUB_REF#refs/tags/}
         
       - name: Publish the package to GPR
         run: dotnet nuget push src/Serilog.Sinks.Telegram/bin/Release/*.nupkg -s "https://api.nuget.org/v3/index.json" -k ${{ secrets.NUGET_API_KEY }}
