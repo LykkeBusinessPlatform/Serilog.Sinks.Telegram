@@ -34,9 +34,9 @@ namespace Serilog.Sinks.Telegram
         // ReSharper disable once UnusedMember.Global
         public ExtendedLogEvent(DateTime firstOccurrence, DateTime lastOccurrence, LogEvent logEvent)
         {
-            this.FirstOccurrence = firstOccurrence;
-            this.LastOccurrence = lastOccurrence;
-            this.LogEvent = logEvent;
+            FirstOccurrence = firstOccurrence;
+            LastOccurrence = lastOccurrence;
+            LogEvent = logEvent;
         }
 
         /// <summary>

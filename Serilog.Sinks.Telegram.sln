@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Telegram", "Serilog.Sinks.Telegram\Serilog.Sinks.Telegram.csproj", "{8CD41BF4-028E-41D4-8C19-F07F9D37080B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Telegram", "src\Serilog.Sinks.Telegram\Serilog.Sinks.Telegram.csproj", "{8CD41BF4-028E-41D4-8C19-F07F9D37080B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.Telegram.Example", "Serilog.Sinks.Telegram.Example\Serilog.Sinks.Telegram.Example.csproj", "{C2417FEC-462D-4994-A34C-86146BD19FB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.Telegram.Example", "src\Serilog.Sinks.Telegram.Example\Serilog.Sinks.Telegram.Example.csproj", "{C2417FEC-462D-4994-A34C-86146BD19FB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C530A701-1BF3-4D14-8D2D-A1320038A4DD}"
+	ProjectSection(SolutionItems) = preProject
+		License.txt = License.txt
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

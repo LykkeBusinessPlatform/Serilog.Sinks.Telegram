@@ -35,15 +35,16 @@ namespace Serilog.Sinks.Telegram
         /// <summary>
         /// The options.
         /// </summary>
-        private readonly TelegramSinkOptions options;
+        private readonly TelegramSinkOptions _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TelegramSink"/> class.
         /// </summary>
         /// <param name="options">Telegram options object.</param>
-        public TelegramSink(TelegramSinkOptions options) : base(options.BatchSizeLimit, options.Period)
+        public TelegramSink(TelegramSinkOptions options)
+            : base(options.BatchSizeLimit, options.Period)
         {
-            this.options = options;
+            _options = options;
         }
 
         /// <inheritdoc cref="PeriodicBatchingSink" />
@@ -63,7 +64,7 @@ namespace Serilog.Sinks.Telegram
 
             foreach (var logEvent in events)
             {
-                if (logEvent.Level < this.options.MinimumLogEventLevel)
+                if (logEvent.Level < _options.MinimumLogEventLevel)
                 {
                     continue;
                 }
@@ -93,15 +94,15 @@ namespace Serilog.Sinks.Telegram
                 }
             }
 
-            if (this.options.SendBatchesAsSingleMessages)
+            if (_options.SendBatchesAsSingleMessages)
             {
                 // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var extendedLogEvent in messagesToSend)
                 {
-                    var message = this.options.FormatProvider != null
-                                      ? extendedLogEvent.LogEvent.RenderMessage(this.options.FormatProvider)
+                    var message = _options.FormatProvider != null
+                                      ? extendedLogEvent.LogEvent.RenderMessage(_options.FormatProvider)
                                       : RenderMessage(extendedLogEvent);
-                    await SendMessage(this.options.BotToken, this.options.ChatId, message);
+                    await SendMessage(_options.BotToken, _options.ChatId, message);
                 }
             }
             else
@@ -112,8 +113,8 @@ namespace Serilog.Sinks.Telegram
                 // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var extendedLogEvent in messagesToSend)
                 {
-                    var message = this.options.FormatProvider != null
-                                      ? extendedLogEvent.LogEvent.RenderMessage(this.options.FormatProvider)
+                    var message = _options.FormatProvider != null
+                                      ? extendedLogEvent.LogEvent.RenderMessage(_options.FormatProvider)
                                       : RenderMessage(extendedLogEvent);
 
                     if (count == messagesToSend.Count)
@@ -130,7 +131,7 @@ namespace Serilog.Sinks.Telegram
                 }
 
                 var messageToSend = sb.ToString();
-                await SendMessage(this.options.BotToken, this.options.ChatId, messageToSend);
+                await SendMessage(_options.BotToken, _options.ChatId, messageToSend);
             }
         }
 
@@ -151,10 +152,19 @@ namespace Serilog.Sinks.Telegram
         /// </summary>
         /// <param name="extLogEvent">The log event.</param>
         /// <returns>The rendered message.</returns>
-        private static string RenderMessage(ExtendedLogEvent extLogEvent)
+        private string RenderMessage(ExtendedLogEvent extLogEvent)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"{GetEmoji(extLogEvent.LogEvent)} {extLogEvent.LogEvent.RenderMessage()}");
+            sb.Append($"{GetEmoji(extLogEvent.LogEvent.Level)} ");
+            if (_options.VisibleProperties != null && extLogEvent.LogEvent.Properties != null)
+            {
+                foreach (var property in extLogEvent.LogEvent.Properties)
+                {
+                    if (_options.VisibleProperties.Contains(property.Key))
+                        sb.AppendLine($"{property.Key}: {property.Value}");
+                }
+            }
+            sb.AppendLine($"{ extLogEvent.LogEvent.RenderMessage()}");
 
             sb.AppendLine(
                 extLogEvent.FirstOccurrence != extLogEvent.LastOccurrence
@@ -177,11 +187,11 @@ namespace Serilog.Sinks.Telegram
         /// <summary>
         /// Gets the emoji.
         /// </summary>
-        /// <param name="log">The log.</param>
+        /// <param name="level">The log level.</param>
         /// <returns>The emoji as <see cref="string"/>.</returns>
-        private static string GetEmoji(LogEvent log)
+        private static string GetEmoji(LogEventLevel level)
         {
-            switch (log.Level)
+            switch (level)
             {
                 case LogEventLevel.Debug:
                     return "👉";

@@ -28,12 +28,12 @@ namespace Serilog.Sinks.Telegram
         /// <summary>
         /// The API URL.
         /// </summary>
-        private readonly Uri apiUrl;
+        private readonly Uri _apiUrl;
 
         /// <summary>
         /// The HTTP client.
         /// </summary>
-        private readonly HttpClient httpClient = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TelegramClient"/> class.
@@ -44,12 +44,10 @@ namespace Serilog.Sinks.Telegram
         public TelegramClient(string botToken, int timeoutSeconds = 10)
         {
             if (string.IsNullOrWhiteSpace(botToken))
-            {
                 throw new ArgumentException("The bot token mustn't be empty.", nameof(botToken));
-            }
 
-            this.apiUrl = new Uri($"{TelegramBotApiUrl}{botToken}/sendMessage");
-            this.httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+            _apiUrl = new Uri($"{TelegramBotApiUrl}{botToken}/sendMessage");
+            _httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace Serilog.Sinks.Telegram
             var payload = new { chat_id = chatId, text = message, parse_mode = "markdown" };
             var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await this.httpClient.PostAsync(this.apiUrl, content);
+            var response = await _httpClient.PostAsync(_apiUrl, content);
             return response;
         }
     }
