@@ -57,6 +57,7 @@ namespace Serilog
                 batchSizeLimit,
                 period,
                 formatProvider,
+                restrictedToMinimumLevel,
                 visibleProperties: visibleProperties);
             return loggerSinkConfiguration.Telegram(telegramSinkOptions, restrictedToMinimumLevel);
         }
