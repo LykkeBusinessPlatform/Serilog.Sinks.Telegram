@@ -66,7 +66,7 @@ The project can be found on [nuget](https://www.nuget.org/packages/HaemmerElectr
                 "Args": {
                     "botToken": "123151488:AAgshf4r373rffsdfOfsdzgfwezfzqwfr7zewE",
                     "chatId": "12345",
-                    "minimumLevel": "Warning"
+                    "restrictedToMinimumLevel": "Warning"
                 }
             }
         ]
