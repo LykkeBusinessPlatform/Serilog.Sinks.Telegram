@@ -7,14 +7,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Serilog.Configuration;
+using Serilog.Events;
+using Serilog.Sinks.Telegram;
+
 namespace Serilog
 {
-    using System;
-
-    using Serilog.Configuration;
-    using Serilog.Events;
-    using Serilog.Sinks.Telegram;
-
     /// <summary>
     /// Provides extension methods on <see cref="LoggerSinkConfiguration"/>.
     /// </summary>
@@ -39,6 +39,7 @@ namespace Serilog
         /// <param name="formatProvider">The format provider used for formatting the message.</param>
         /// <param name="restrictedToMinimumLevel"><see cref="LogEventLevel"/> value that specifies minimum logging
         /// level that will be allowed to be logged.</param>
+        /// <param name="visibleProperties">A value indicating log event properties that must be appended to the message.</param>
         /// <returns>Instance of <see cref="LoggerConfiguration"/> object.</returns>
         public static LoggerConfiguration Telegram(
             this LoggerSinkConfiguration loggerSinkConfiguration,
@@ -47,9 +48,16 @@ namespace Serilog
             int? batchSizeLimit = null,
             TimeSpan? period = null,
             IFormatProvider formatProvider = null,
-            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum)
+            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
+            IEnumerable<string> visibleProperties = null)
         {
-            var telegramSinkOptions = new TelegramSinkOptions(botToken, chatId, batchSizeLimit, period, formatProvider);
+            var telegramSinkOptions = new TelegramSinkOptions(
+                botToken,
+                chatId,
+                batchSizeLimit,
+                period,
+                formatProvider,
+                visibleProperties: visibleProperties);
             return loggerSinkConfiguration.Telegram(telegramSinkOptions, restrictedToMinimumLevel);
         }
 

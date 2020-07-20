@@ -7,14 +7,12 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using Serilog.Events;
 
 namespace Serilog.Sinks.Telegram
 {
-    using System;
-
-    using Serilog.Events;
-
     /// <summary>
     /// Container for all Telegram sink configurations.
     /// </summary>
