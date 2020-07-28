@@ -21,6 +21,11 @@ namespace Serilog.Sinks.Telegram
     public class TelegramClient
     {
         /// <summary>
+        /// Max message length
+        /// </summary>
+        private const int MaxMessageLength = 4000;
+
+        /// <summary>
         /// The Telegram bot API URL.
         /// </summary>
         private const string TelegramBotApiUrl = "https://api.telegram.org/bot";
@@ -58,10 +63,34 @@ namespace Serilog.Sinks.Telegram
         /// <returns>A <see cref="HttpResponseMessage"/>.</returns>
         public async Task<HttpResponseMessage> PostMessageAsync(string message, string chatId)
         {
-            var payload = new { chat_id = chatId, text = message, parse_mode = "markdown" };
-            var json = JsonConvert.SerializeObject(payload);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(_apiUrl, content);
+            HttpResponseMessage response;
+            do
+            {
+                var text = message;
+                if (message.Length > MaxMessageLength)
+                {
+                    var lastLineBreakIndex = message.LastIndexOf("\r\n", MaxMessageLength, StringComparison.Ordinal);
+                    if (lastLineBreakIndex == -1)
+                        lastLineBreakIndex = message.LastIndexOf('\n', MaxMessageLength);
+                    text = message.Substring(0, lastLineBreakIndex) + "```";
+                    message = "```" + message.Substring(lastLineBreakIndex);
+                }
+                else
+                {
+                    message = null;
+                }
+                var payload = new { chat_id = chatId, text, parse_mode = "markdown" };
+                var json = JsonConvert.SerializeObject(payload);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                response = await _httpClient.PostAsync(_apiUrl, content);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var contentStr = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to send log event to Telegram bot: {contentStr}");
+                }
+            }
+            while (message != null);
+
             return response;
         }
     }
