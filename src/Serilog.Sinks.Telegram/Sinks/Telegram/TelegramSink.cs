@@ -164,7 +164,11 @@ namespace Serilog.Sinks.Telegram
                         sb.AppendLine($"{property.Key}: {property.Value}");
                 }
             }
-            sb.AppendLine($"{ extLogEvent.LogEvent.RenderMessage()}");
+            var message = extLogEvent.LogEvent.RenderMessage();
+            if (message.Contains("_"))
+                sb.AppendLine($"```{message}```");
+            else
+                sb.AppendLine(message);
 
             sb.AppendLine(
                 extLogEvent.FirstOccurrence != extLogEvent.LastOccurrence
